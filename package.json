@@ -1,0 +1,42 @@
+{
+  "name": "next-rybbit",
+  "version": "0.1.0",
+  "description": "Simple integration for Rybbit Analytics in Next.js applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "rybbit",
+    "analytics",
+    "rybbit-analytics",
+    "nextjs",
+    "react",
+    "tracking"
+  ],
+  "author": "Paul Harrer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PaulHarrer/next-rybbit.git"
+  },
+  "peerDependencies": {
+    "next": ">=10.0.0",
+    "react": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  },
+  "dependencies": {}
+}
