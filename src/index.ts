@@ -1,7 +1,2 @@
-export { default as RybbitProvider } from "./RybbitProvider";
-export { useRybbit } from "./useRybbit";
-export type {
-  RybbitProps,
-  EventOptions,
-  PageviewOptions,
-} from "./types";
+export { RybbitProvider, default } from "./RybbitProvider";
+export type { RybbitProviderProps } from "./RybbitProvider";
