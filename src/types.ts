@@ -12,7 +12,7 @@ export interface RybbitOptions {
 }
 
 export interface RybbitProps {
-  domain: string;
+  siteId: string;
   enabled?: boolean;
   trackLocalhost?: boolean;
   manualPageViews?: boolean;
