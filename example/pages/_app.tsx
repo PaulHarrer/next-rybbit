@@ -5,8 +5,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <RybbitProvider
-        analyticsHost="https://rybbit.yourdomain.com/api"
         siteId="YOUR_SITE_ID"
+        analyticsHost="https://rybbit.yourdomain.com/api"
         enabled={process.env.NODE_ENV === "production"}
         trackLocalhost={process.env.NODE_ENV === "development"}
         trackOutboundLinks={true}

@@ -25,8 +25,8 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <RybbitProvider 
-        analyticsHost="https://rybbit.yourdomain.com/api"
-        siteId="YOUR_SITE_ID" 
+        siteId="YOUR_SITE_ID"
+        analyticsHost="https://rybbit.yourdomain.com/api" // Optional: only required if selfhosted
       />
       <Component {...pageProps} />
     </>
@@ -48,9 +48,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <RybbitProvider 
-          analyticsHost="https://rybbit.yourdomain.com/api"
-          siteId="YOUR_SITE_ID" 
+        <RybbitProvider
+          siteId="YOUR_SITE_ID"
+          analyticsHost="https://rybbit.yourdomain.com/api" // Optional: only required if selfhosted
         />
         {children}
       </body>
@@ -63,8 +63,8 @@ export default function RootLayout({
 
 ```tsx
 <RybbitProvider
-  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
+  analyticsHost="https://rybbit.yourdomain.com/api" // Optional: only required if selfhosted
   enabled={true} // Set to false to disable tracking
   trackLocalhost={false} // Set to true to track localhost
   debounce={500} // Debounce time for SPA pageviews (ms)
@@ -86,8 +86,8 @@ export default function RootLayout({
 
 ```tsx
 <RybbitProvider
-  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
+  analyticsHost="https://rybbit.yourdomain.com/api" // Optional: only required if selfhosted
   skipPatterns={[
     '/admin/*',     // Skip all admin pages
     '/api/*',       // Skip API routes
@@ -225,8 +225,8 @@ You can conditionally enable tracking based on environment:
 
 ```tsx
 <RybbitProvider
-  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
+  analyticsHost="https://rybbit.yourdomain.com/api" // Optional: only required if selfhosted
   enabled={process.env.NODE_ENV === 'production'}
   trackLocalhost={process.env.NODE_ENV === 'development'}
   debug={process.env.NODE_ENV === 'development'}
