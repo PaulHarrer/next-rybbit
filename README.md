@@ -145,6 +145,52 @@ function MyComponent() {
 }
 ```
 
+### User Identification
+
+You can identify users and associate events with their identity:
+
+```tsx
+import { useRybbit } from 'next-rybbit';
+
+function ProfileComponent() {
+  const { identify, clearUserId, getUserId } = useRybbit();
+  
+  // Identify a user with optional properties
+  const handleLogin = (userData) => {
+    identify(userData.id, {
+      name: userData.name,
+      email: userData.email,
+      plan: userData.plan
+    });
+  };
+  
+  // Clear user identification on logout
+  const handleLogout = () => {
+    clearUserId();
+  };
+  
+  // Get the current user ID
+  const checkCurrentUser = () => {
+    const currentUserId = getUserId();
+    console.log("Current user:", currentUserId);
+  };
+  
+  return (
+    <div>
+      <button onClick={() => handleLogin({id: '123', name: 'John', email: 'john@example.com', plan: 'pro'})}>
+        Login as John
+      </button>
+      <button onClick={handleLogout}>
+        Logout
+      </button>
+      <button onClick={checkCurrentUser}>
+        Check Current User
+      </button>
+    </div>
+  );
+}
+```
+
 ### Manual Pageview Tracking
 
 If you need to manually track pageviews (useful for SPAs with custom routing):
@@ -193,7 +239,7 @@ You can conditionally enable tracking based on environment:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `analyticsHost` | `string` | **required** | URL of your Rybbit analytics instance (e.g., `https://rybbit.yourdomain.com/api`) |
+| `analyticsHost` | `string` | `"https://api.rybbit.io/api"` | URL of your Rybbit analytics instance (e.g., `https://rybbit.yourdomain.com/api`) |
 | `siteId` | `string \| number` | **required** | The Site ID for your website obtained from your Rybbit instance |
 | `enabled` | `boolean` | `true` | Enable/disable tracking |
 | `trackLocalhost` | `boolean` | `false` | Track events on localhost |
@@ -232,6 +278,25 @@ Manually track a pageview.
   - `deviceWidth` (number): Device width
   - `props` (object): Custom properties
 
+#### `identify(userId, props?)`
+
+Identify a user for subsequent events.
+
+**Parameters:**
+- `userId` (string): Unique identifier for the user
+- `props` (object, optional): Additional user properties
+
+#### `clearUserId()`
+
+Clear the current user identification.
+
+#### `getUserId()`
+
+Get the current user ID if any user is identified.
+
+**Returns:**
+- `string | null`: The current user ID or null if no user is identified
+
 ## License
 
 MIT
@@ -239,3 +304,4 @@ MIT
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
