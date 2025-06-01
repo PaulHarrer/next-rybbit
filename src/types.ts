@@ -21,7 +21,6 @@ export interface RybbitProps {
   outboundLinks?: boolean;
   customDomain?: string;
   integrity?: string;
-  selfHosted?: boolean;
   src?: string;
 }
 

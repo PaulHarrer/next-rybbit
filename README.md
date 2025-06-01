@@ -24,7 +24,7 @@ import { RybbitProvider } from 'next-rybbit';
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <RybbitProvider domain="yourdomain.com" />
+      <RybbitProvider siteId="YOUR_SITE_ID" />
       <Component {...pageProps} />
     </>
   );
@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <RybbitProvider domain="yourdomain.com" />
+        <RybbitProvider siteId="YOUR_SITE_ID" />
         {children}
       </body>
     </html>
@@ -57,17 +57,30 @@ export default function RootLayout({
 
 ```tsx
 <RybbitProvider
-  domain="yourdomain.com"
+  siteId="YOUR_SITE_ID"
   enabled={true} // Set to false to disable tracking
   trackLocalhost={false} // Set to true to track localhost
   manualPageViews={false} // Set to true for manual pageview tracking
   taggedEvents={true} // Enable tagged events
   revenue={true} // Enable revenue tracking
   outboundLinks={true} // Track outbound link clicks
-  customDomain="analytics.yourdomain.com" // Use custom domain
+  customDomain="analytics.yourdomain.com" // Use custom domain for self-hosted
   integrity="sha384-..." // Add integrity hash for security
 />
 ```
+
+### Self-Hosted Setup
+
+For self-hosted Rybbit instances, use the `customDomain` prop:
+
+```tsx
+<RybbitProvider
+  siteId="YOUR_SITE_ID"
+  customDomain="your-rybbit-domain.com"
+/>
+```
+
+This will load the script from `https://your-rybbit-domain.com/api/script.js` instead of the default cloud URL.
 
 ### Using the Hook
 
@@ -147,7 +160,7 @@ You can conditionally enable tracking based on environment:
 
 ```tsx
 <RybbitProvider
-  domain="yourdomain.com"
+  siteId="YOUR_SITE_ID"
   enabled={process.env.NODE_ENV === 'production'}
   trackLocalhost={process.env.NODE_ENV === 'development'}
 />
@@ -159,7 +172,7 @@ You can conditionally enable tracking based on environment:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `domain` | `string` | **required** | Your site's domain as configured in Rybbit |
+| `siteId` | `string` | **required** | Your site ID from Rybbit dashboard |
 | `enabled` | `boolean` | `true` | Enable/disable tracking |
 | `trackLocalhost` | `boolean` | `false` | Track events on localhost |
 | `manualPageViews` | `boolean` | `false` | Disable automatic pageview tracking |

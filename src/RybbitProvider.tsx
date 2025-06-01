@@ -3,7 +3,7 @@ import Script from "next/script";
 import { RybbitProps } from "./types";
 
 const RybbitProvider: React.FC<RybbitProps> = ({
-  domain,
+  siteId,
   enabled = true,
   trackLocalhost = false,
   manualPageViews = false,
@@ -12,7 +12,6 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   outboundLinks = false,
   customDomain,
   integrity,
-  selfHosted = false,
   src,
 }) => {
   // Skip rendering if disabled
@@ -28,23 +27,23 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   // Build script source URL
   const getScriptSrc = (): string => {
     if (src) return src;
-    
-    const baseUrl = customDomain || "rybbit.io";
+
+    const baseUrl = customDomain || "app.rybbit.io";
     const protocol = baseUrl.startsWith("localhost") ? "http" : "https";
-    
-    let scriptPath = "/js/script.js";
-    
+
+    let scriptPath = "/api/script.js";
+
     // Add extensions based on options
     const extensions: string[] = [];
     if (outboundLinks) extensions.push("outbound-links");
     if (taggedEvents) extensions.push("tagged-events");
     if (revenue) extensions.push("revenue");
     if (manualPageViews) extensions.push("manual");
-    
+
     if (extensions.length > 0) {
-      scriptPath = `/js/script.${extensions.join(".")}.js`;
+      scriptPath = `/api/script.${extensions.join(".")}.js`;
     }
-    
+
     return `${protocol}://${baseUrl}${scriptPath}`;
   };
 
@@ -53,10 +52,11 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   return (
     <Script
       src={scriptSrc}
-      data-domain={domain}
+      data-site-id={siteId}
       strategy="afterInteractive"
       integrity={integrity}
       crossOrigin={integrity ? "anonymous" : undefined}
+      async
     />
   );
 };
