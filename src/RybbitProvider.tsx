@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Script from "next/script";
 import { RybbitProps } from "./types";
 
@@ -18,15 +18,18 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   integrity,
   src,
 }) => {
-  // Skip rendering if disabled
-  if (!enabled) {
-    return null;
-  }
+  const [shouldRender, setShouldRender] = useState(false);
 
-  // Skip localhost tracking if not enabled
-  if (!trackLocalhost && typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return null;
-  }
+  useEffect(() => {
+    let render = enabled;
+    
+    // Check for localhost and only execute on client side
+    if (!trackLocalhost && window.location.hostname === "localhost") {
+      render = false;
+    }
+    
+    setShouldRender(render);
+  }, [enabled, trackLocalhost]);
 
   // Build script source URL
   const getScriptSrc = (): string => {
@@ -52,6 +55,16 @@ const RybbitProvider: React.FC<RybbitProps> = ({
     maskPatterns,
     debug,
   };
+
+  // On the server side, we don't render the script immediately
+  if (!shouldRender && typeof window !== 'undefined') {
+    return null;
+  }
+
+  // Temporary placeholder for server-side rendering
+  if (typeof window === 'undefined') {
+    return <div id="rybbit-provider-placeholder" />;
+  }
 
   return (
     <>
