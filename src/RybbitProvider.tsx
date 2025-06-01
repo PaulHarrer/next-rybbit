@@ -3,14 +3,18 @@ import Script from "next/script";
 import { RybbitProps } from "./types";
 
 const RybbitProvider: React.FC<RybbitProps> = ({
+  analyticsHost,
   siteId,
   enabled = true,
   trackLocalhost = false,
-  manualPageViews = false,
-  taggedEvents = false,
-  revenue = false,
-  outboundLinks = false,
-  customDomain,
+  debounce = 500,
+  autoTrackPageviews = true,
+  autoTrackSpaRoutes = true,
+  trackQuerystring = true,
+  trackOutboundLinks = true,
+  skipPatterns = [],
+  maskPatterns = [],
+  debug = false,
   integrity,
   src,
 }) => {
@@ -27,37 +31,45 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   // Build script source URL
   const getScriptSrc = (): string => {
     if (src) return src;
-
-    const baseUrl = customDomain || "app.rybbit.io";
-    const protocol = baseUrl.startsWith("localhost") ? "http" : "https";
-
-    let scriptPath = "/api/script.js";
-
-    // Add extensions based on options
-    const extensions: string[] = [];
-    if (outboundLinks) extensions.push("outbound-links");
-    if (taggedEvents) extensions.push("tagged-events");
-    if (revenue) extensions.push("revenue");
-    if (manualPageViews) extensions.push("manual");
-
-    if (extensions.length > 0) {
-      scriptPath = `/api/script.${extensions.join(".")}.js`;
-    }
-
-    return `${protocol}://${baseUrl}${scriptPath}`;
+    
+    // analyticsHost should include the full path like https://rybbit.yourdomain.com/api
+    const baseUrl = analyticsHost.replace(/\/api\/?$/, ""); // Remove /api if present
+    return `${baseUrl}/api/script.js`;
   };
 
   const scriptSrc = getScriptSrc();
 
+  // Build configuration object
+  const config = {
+    analyticsHost,
+    siteId: siteId.toString(),
+    debounce,
+    autoTrackPageviews,
+    autoTrackSpaRoutes,
+    trackQuerystring,
+    trackOutboundLinks,
+    skipPatterns,
+    maskPatterns,
+    debug,
+  };
+
   return (
-    <Script
-      src={scriptSrc}
-      data-site-id={siteId}
-      strategy="afterInteractive"
-      integrity={integrity}
-      crossOrigin={integrity ? "anonymous" : undefined}
-      async
-    />
+    <>
+      {/* Initialize rybbit config before script loads */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.rybbitConfig = ${JSON.stringify(config)};`
+        }}
+      />
+      <Script
+        src={scriptSrc}
+        data-site-id={siteId}
+        strategy="afterInteractive"
+        integrity={integrity}
+        crossOrigin={integrity ? "anonymous" : undefined}
+        async
+      />
+    </>
   );
 };
 

@@ -17,10 +17,6 @@ export const useRybbit = () => {
       eventData.props = options.props;
     }
 
-    if (options?.revenue) {
-      eventData.revenue = options.revenue;
-    }
-
     window.rybbit("event", eventData);
 
     if (options?.callback) {

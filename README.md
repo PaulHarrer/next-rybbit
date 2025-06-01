@@ -24,7 +24,10 @@ import { RybbitProvider } from 'next-rybbit';
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <RybbitProvider siteId="YOUR_SITE_ID" />
+      <RybbitProvider 
+        analyticsHost="https://rybbit.yourdomain.com/api"
+        siteId="YOUR_SITE_ID" 
+      />
       <Component {...pageProps} />
     </>
   );
@@ -45,7 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <RybbitProvider siteId="YOUR_SITE_ID" />
+        <RybbitProvider 
+          analyticsHost="https://rybbit.yourdomain.com/api"
+          siteId="YOUR_SITE_ID" 
+        />
         {children}
       </body>
     </html>
@@ -57,30 +63,43 @@ export default function RootLayout({
 
 ```tsx
 <RybbitProvider
+  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
   enabled={true} // Set to false to disable tracking
   trackLocalhost={false} // Set to true to track localhost
-  manualPageViews={false} // Set to true for manual pageview tracking
-  taggedEvents={true} // Enable tagged events
-  revenue={true} // Enable revenue tracking
-  outboundLinks={true} // Track outbound link clicks
-  customDomain="analytics.yourdomain.com" // Use custom domain for self-hosted
+  debounce={500} // Debounce time for SPA pageviews (ms)
+  autoTrackPageviews={true} // Automatically track pageviews
+  autoTrackSpaRoutes={true} // Track SPA route changes
+  trackQuerystring={true} // Include query string in tracking
+  trackOutboundLinks={true} // Track outbound link clicks
+  skipPatterns={['/admin/*', '/internal/*']} // Skip tracking for these paths
+  maskPatterns={['/user/:id', '/order/:id']} // Mask sensitive paths
+  debug={false} // Enable debug logging
   integrity="sha384-..." // Add integrity hash for security
 />
 ```
 
-### Self-Hosted Setup
+### Path Matching
 
-For self-hosted Rybbit instances, use the `customDomain` prop:
+**Skip Patterns**: Pageviews matching these patterns won't be tracked at all.
+**Mask Patterns**: For matching paths, the original path is replaced by the pattern in tracked data.
 
 ```tsx
 <RybbitProvider
+  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
-  customDomain="your-rybbit-domain.com"
+  skipPatterns={[
+    '/admin/*',     // Skip all admin pages
+    '/api/*',       // Skip API routes
+    '/internal/*'   // Skip internal pages
+  ]}
+  maskPatterns={[
+    '/user/:id',    // /user/123 becomes /user/:id
+    '/order/:id',   // /order/abc becomes /order/:id
+    '/profile/*'    // /profile/settings becomes /profile/*
+  ]}
 />
 ```
-
-This will load the script from `https://your-rybbit-domain.com/api/script.js` instead of the default cloud URL.
 
 ### Using the Hook
 
@@ -160,9 +179,11 @@ You can conditionally enable tracking based on environment:
 
 ```tsx
 <RybbitProvider
+  analyticsHost="https://rybbit.yourdomain.com/api"
   siteId="YOUR_SITE_ID"
   enabled={process.env.NODE_ENV === 'production'}
   trackLocalhost={process.env.NODE_ENV === 'development'}
+  debug={process.env.NODE_ENV === 'development'}
 />
 ```
 
@@ -172,14 +193,18 @@ You can conditionally enable tracking based on environment:
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `siteId` | `string` | **required** | Your site ID from Rybbit dashboard |
+| `analyticsHost` | `string` | **required** | URL of your Rybbit analytics instance (e.g., `https://rybbit.yourdomain.com/api`) |
+| `siteId` | `string \| number` | **required** | The Site ID for your website obtained from your Rybbit instance |
 | `enabled` | `boolean` | `true` | Enable/disable tracking |
 | `trackLocalhost` | `boolean` | `false` | Track events on localhost |
-| `manualPageViews` | `boolean` | `false` | Disable automatic pageview tracking |
-| `taggedEvents` | `boolean` | `false` | Enable tagged events |
-| `revenue` | `boolean` | `false` | Enable revenue tracking |
-| `outboundLinks` | `boolean` | `false` | Track outbound link clicks |
-| `customDomain` | `string` | `undefined` | Custom domain for self-hosted Rybbit |
+| `debounce` | `number` | `500` | Debounce time in milliseconds for tracking SPA pageviews after route changes |
+| `autoTrackPageviews` | `boolean` | `true` | If `true`, automatically tracks pageviews on initial load |
+| `autoTrackSpaRoutes` | `boolean` | `true` | If `true`, automatically tracks pageviews when browser history changes |
+| `trackQuerystring` | `boolean` | `true` | If `true`, includes the URL's query string in the tracked data |
+| `trackOutboundLinks` | `boolean` | `true` | If `true`, automatically tracks clicks on anchor tags that link to external domains |
+| `skipPatterns` | `string[]` | `[]` | Array of path patterns. Pageviews whose path matches any pattern will not be tracked |
+| `maskPatterns` | `string[]` | `[]` | Array of path patterns. For matching pageview paths, the original path will be replaced by the pattern |
+| `debug` | `boolean` | `false` | If `true`, enables detailed logging to the browser console |
 | `integrity` | `string` | `undefined` | Integrity hash for script |
 
 ### useRybbit Hook
@@ -194,7 +219,6 @@ Track a custom event.
 - `eventName` (string): Name of the event
 - `options` (object, optional):
   - `props` (object): Custom properties
-  - `revenue` (object): Revenue data with `currency` and `amount`
   - `callback` (function): Callback function after tracking
 
 #### `trackPageview(options?)`

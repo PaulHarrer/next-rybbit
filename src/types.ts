@@ -1,25 +1,29 @@
 export interface RybbitOptions {
-  domain: string;
-  apiKey?: string;
-  enabled?: boolean;
-  trackLocalhost?: boolean;
-  manualPageViews?: boolean;
-  taggedEvents?: boolean;
-  revenue?: boolean;
-  outboundLinks?: boolean;
-  customDomain?: string;
-  integrity?: string;
+  analyticsHost: string;
+  siteId: string | number;
+  debounce?: number;
+  autoTrackPageviews?: boolean;
+  autoTrackSpaRoutes?: boolean;
+  trackQuerystring?: boolean;
+  trackOutboundLinks?: boolean;
+  skipPatterns?: string[];
+  maskPatterns?: string[];
+  debug?: boolean;
 }
 
 export interface RybbitProps {
-  siteId: string;
+  analyticsHost: string;
+  siteId: string | number;
   enabled?: boolean;
   trackLocalhost?: boolean;
-  manualPageViews?: boolean;
-  taggedEvents?: boolean;
-  revenue?: boolean;
-  outboundLinks?: boolean;
-  customDomain?: string;
+  debounce?: number;
+  autoTrackPageviews?: boolean;
+  autoTrackSpaRoutes?: boolean;
+  trackQuerystring?: boolean;
+  trackOutboundLinks?: boolean;
+  skipPatterns?: string[];
+  maskPatterns?: string[];
+  debug?: boolean;
   integrity?: string;
   src?: string;
 }
@@ -27,10 +31,6 @@ export interface RybbitProps {
 export interface EventOptions {
   callback?: () => void;
   props?: Record<string, string | number | boolean>;
-  revenue?: {
-    currency: string;
-    amount: number;
-  };
 }
 
 export interface PageviewOptions {
