@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Script from "next/script";
 import { RybbitProps } from "./types";
 
@@ -18,34 +18,32 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   integrity,
   src,
 }) => {
-  const [shouldRender, setShouldRender] = useState(false);
-
+  // Use a client-side effect to set up Rybbit, rather than having conditional rendering
   useEffect(() => {
-    let render = enabled;
+    if (!enabled) return;
+    if (!trackLocalhost && window.location.hostname === "localhost") return;
+
+    // Build configuration object
+    const config = {
+      analyticsHost,
+      siteId: siteId.toString(),
+      debounce,
+      autoTrackPageviews,
+      autoTrackSpaRoutes,
+      trackQuerystring,
+      trackOutboundLinks,
+      skipPatterns,
+      maskPatterns,
+      debug,
+    };
     
-    // Check for localhost and only execute on client side
-    if (!trackLocalhost && window.location.hostname === "localhost") {
-      render = false;
-    }
-    
-    setShouldRender(render);
-  }, [enabled, trackLocalhost]);
-
-  // Build script source URL
-  const getScriptSrc = (): string => {
-    if (src) return src;
-
-    // analyticsHost should include the full path like https://rybbit.yourdomain.com/api
-    const baseUrl = analyticsHost.replace(/\/api\/?$/, ""); // Remove /api if present
-    return `${baseUrl}/api/script.js`;
-  };
-
-  const scriptSrc = getScriptSrc();
-
-  // Build configuration object
-  const config = {
+    // Make config available globally
+    window.rybbitConfig = config;
+  }, [
     analyticsHost,
-    siteId: siteId.toString(),
+    siteId,
+    enabled,
+    trackLocalhost,
     debounce,
     autoTrackPageviews,
     autoTrackSpaRoutes,
@@ -53,36 +51,26 @@ const RybbitProvider: React.FC<RybbitProps> = ({
     trackOutboundLinks,
     skipPatterns,
     maskPatterns,
-    debug,
+    debug
+  ]);
+
+  // Build script source URL
+  const getScriptSrc = (): string => {
+    if (src) return src;
+    const baseUrl = analyticsHost.replace(/\/api\/?$/, ""); // Remove /api if present
+    return `${baseUrl}/api/script.js`;
   };
 
-  // On the server side, we don't render the script immediately
-  if (!shouldRender && typeof window !== 'undefined') {
-    return null;
-  }
-
-  // Temporary placeholder for server-side rendering
-  if (typeof window === 'undefined') {
-    return <div id="rybbit-provider-placeholder" />;
-  }
-
+  // Always return the same structure for both server and client
   return (
-    <>
-      {/* Initialize rybbit config before script loads */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `window.rybbitConfig = ${JSON.stringify(config)};`
-        }}
-      />
-      <Script
-        src={scriptSrc}
-        data-site-id={siteId}
-        strategy="afterInteractive"
-        integrity={integrity}
-        crossOrigin={integrity ? "anonymous" : undefined}
-        async
-      />
-    </>
+    <Script
+      id="rybbit-analytics-script"
+      src={getScriptSrc()}
+      data-site-id={siteId.toString()}
+      strategy="lazyOnload"
+      integrity={integrity}
+      crossOrigin={integrity ? "anonymous" : undefined}
+    />
   );
 };
 
