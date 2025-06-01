@@ -3,7 +3,7 @@ import Script from "next/script";
 import { RybbitProps } from "./types";
 
 const RybbitProvider: React.FC<RybbitProps> = ({
-  analyticsHost,
+  analyticsHost = "https://api.rybbit.io/api",
   siteId,
   enabled = true,
   trackLocalhost = false,
@@ -31,7 +31,7 @@ const RybbitProvider: React.FC<RybbitProps> = ({
   // Build script source URL
   const getScriptSrc = (): string => {
     if (src) return src;
-    
+
     // analyticsHost should include the full path like https://rybbit.yourdomain.com/api
     const baseUrl = analyticsHost.replace(/\/api\/?$/, ""); // Remove /api if present
     return `${baseUrl}/api/script.js`;

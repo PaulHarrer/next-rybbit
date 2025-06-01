@@ -1,6 +1,6 @@
 export interface RybbitOptions {
-  analyticsHost: string;
   siteId: string | number;
+  analyticsHost?: string;
   debounce?: number;
   autoTrackPageviews?: boolean;
   autoTrackSpaRoutes?: boolean;
@@ -12,8 +12,8 @@ export interface RybbitOptions {
 }
 
 export interface RybbitProps {
-  analyticsHost: string;
   siteId: string | number;
+  analyticsHost?: string;
   enabled?: boolean;
   trackLocalhost?: boolean;
   debounce?: number;

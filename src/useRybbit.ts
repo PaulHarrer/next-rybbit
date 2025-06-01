@@ -48,9 +48,35 @@ export const useRybbit = () => {
     window.rybbit("pageview", pageviewData);
   }, []);
 
+  const identify = useCallback((userId: string, props?: Record<string, string | number | boolean>) => {
+    if (typeof window === "undefined" || !window.rybbit) return;
+
+    const userData: any = { id: userId };
+
+    if (props) {
+      userData.props = props;
+    }
+
+    window.rybbit("identify", userData);
+  }, []);
+
+  const clearUserId = useCallback(() => {
+    if (typeof window === "undefined" || !window.rybbit) return;
+
+    window.rybbit("clearUserId");
+  }, []);
+
+  const getUserId = useCallback(() => {
+    if (typeof window === "undefined" || !window.rybbit) return null;
+    return window.rybbit("getUserId");
+  }, []);
+
   return {
     rybbit,
     trackEvent,
     trackPageview,
+    identify,
+    clearUserId,
+    getUserId,
   };
 };
