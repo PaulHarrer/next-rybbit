@@ -11,13 +11,16 @@ export const useRybbit = () => {
   const trackEvent = useCallback((eventName: string, options?: EventOptions) => {
     if (typeof window === "undefined" || !window.rybbit) return;
 
-    const eventData: any = { name: eventName };
+    const eventData: any = {
+      type: "custom_event",  // Geändert von "event" zu "custom_event"
+      name: eventName
+    };
 
     if (options?.props) {
       eventData.props = options.props;
     }
 
-    window.rybbit("custom_event", eventData);
+    window.rybbit(eventData);  // Geändert: nur eventData übergeben, nicht "event" als ersten Parameter
 
     if (options?.callback) {
       options.callback();
@@ -27,7 +30,9 @@ export const useRybbit = () => {
   const trackPageview = useCallback((options?: PageviewOptions) => {
     if (typeof window === "undefined" || !window.rybbit) return;
 
-    const pageviewData: any = {};
+    const pageviewData: any = {
+      type: "pageview"  // Explizit type hinzugefügt
+    };
 
     if (options?.url) {
       pageviewData.url = options.url;
@@ -45,7 +50,7 @@ export const useRybbit = () => {
       pageviewData.props = options.props;
     }
 
-    window.rybbit("pageview", pageviewData);
+    window.rybbit(pageviewData);  // Geändert: nur pageviewData übergeben
   }, []);
 
   const identify = useCallback((userId: string, props?: Record<string, string | number | boolean>) => {
