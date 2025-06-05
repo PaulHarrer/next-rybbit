@@ -17,7 +17,7 @@ export const useRybbit = () => {
       eventData.props = options.props;
     }
 
-    window.rybbit("event", eventData);
+    window.rybbit("custom_event", eventData);
 
     if (options?.callback) {
       options.callback();
