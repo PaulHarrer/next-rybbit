@@ -9,18 +9,27 @@ export const useRybbit = () => {
   }, []);
 
   const trackEvent = useCallback((eventName: string, options?: EventOptions) => {
-    if (typeof window === "undefined" || !window.rybbit) return;
+    if (typeof window === "undefined") return;
 
-    const eventData: any = {
-      type: "custom_event",
-      name: eventName
-    };
-
-    if (options?.props) {
-      eventData.props = options.props;
+    if (!window.rybbit) {
+      console.warn("Rybbit is not initialized yet");
+      return;
     }
 
-    window.rybbit(eventData);
+    if (typeof window.rybbit.event !== "function") {
+      console.error("window.rybbit.event is not a function");
+      return;
+    }
+
+    try {
+      if (options?.props) {
+        window.rybbit.event(eventName, options.props);
+      } else {
+        window.rybbit.event(eventName);
+      }
+    } catch (error) {
+      console.error("Error calling rybbit.event:", error);
+    }
 
     if (options?.callback) {
       options.callback();

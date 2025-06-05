@@ -45,6 +45,7 @@ declare global {
     rybbit?: {
       (...args: any[]): void;
       q?: any[];
+      event?: (eventName: string, props?: any) => void;
     };
   }
 }

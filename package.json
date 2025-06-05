@@ -1,6 +1,6 @@
 {
   "name": "next-rybbit",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Simple integration for Rybbit Analytics in Next.js applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
