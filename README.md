@@ -86,6 +86,90 @@ The `RybbitProvider` component automatically loads the Rybbit analytics script w
 
 The script is loaded from `{analyticsHost}/script.js` and configured with your site ID.
 
+## Tracking API
+
+You can use the `useRybbit` hook to access tracking functions in your components:
+
+```tsx
+import { useRybbit } from 'next-rybbit';
+
+function MyComponent() {
+  const { trackEvent, trackPageview, identify, clearUserId, getUserId } = useRybbit();
+  
+  // Use tracking functions here
+}
+```
+
+### trackPageview
+
+Tracks a page view with optional parameters.
+
+```tsx
+const { trackPageview } = useRybbit();
+
+// Basic usage - tracks current page
+trackPageview();
+
+// With custom URL and properties
+trackPageview({
+  url: '/custom-path',
+  referrer: 'https://example.com',
+  deviceWidth: 1024,
+  props: {
+    section: 'blog',
+    category: 'tech'
+  }
+});
+```
+
+### identify
+
+Associates the current visitor with a user ID and optional properties.
+
+```tsx
+const { identify } = useRybbit();
+
+// Basic usage - just set user ID
+identify('user-123');
+
+// With user properties
+identify('user-123', {
+  plan: 'premium',
+  subscribed: true,
+  loginCount: 42
+});
+```
+
+### clearUserId
+
+Clears the currently set user ID.
+
+```tsx
+const { clearUserId } = useRybbit();
+
+// Use on logout
+const handleLogout = () => {
+  // Logout logic
+  clearUserId();
+};
+```
+
+### getUserId
+
+Returns the currently set user ID.
+
+```tsx
+const { getUserId } = useRybbit();
+
+// Check if user is identified
+const currentUserId = getUserId();
+if (currentUserId) {
+  console.log('User is identified as:', currentUserId);
+} else {
+  console.log('User is anonymous');
+}
+```
+
 ## TypeScript Support
 
 This package includes full TypeScript support with type definitions.
