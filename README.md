@@ -100,6 +100,34 @@ function MyComponent() {
 }
 ```
 
+### trackEvent
+
+Tracks a custom event with a name and optional parameters.
+
+```tsx
+const { trackEvent } = useRybbit();
+
+// Basic usage - just the event name
+trackEvent('button_clicked');
+
+// With custom properties
+trackEvent('product_purchased', {
+  props: {
+    productId: 'prod-123',
+    price: 49.99,
+    currency: 'USD'
+  }
+});
+
+// With callback function
+trackEvent('form_submitted', {
+  props: { formId: 'contact' },
+  callback: () => {
+    console.log('Event tracked successfully');
+  }
+});
+```
+
 ### trackPageview
 
 Tracks a page view with optional parameters.
