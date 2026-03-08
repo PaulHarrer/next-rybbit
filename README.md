@@ -94,7 +94,7 @@ You can use the `useRybbit` hook to access tracking functions in your components
 import { useRybbit } from 'next-rybbit';
 
 function MyComponent() {
-  const { trackEvent, trackPageview, identify, clearUserId, getUserId } = useRybbit();
+  const { trackEvent, trackPageview, identify, setTraits, clearUserId, getUserId } = useRybbit();
   
   // Use tracking functions here
 }
@@ -165,6 +165,25 @@ identify('user-123', {
   plan: 'premium',
   subscribed: true,
   loginCount: 42
+});
+```
+
+### setTraits
+
+Updates traits for the currently identified user without re-identifying them. Requires `identify()` to have been called first.
+
+```tsx
+const { setTraits } = useRybbit();
+
+// Update user traits
+setTraits({
+  plan: 'enterprise',
+  upgraded_at: '2024-01-15'
+});
+
+// Remove a trait by setting it to null
+setTraits({
+  temporary_flag: null
 });
 ```
 

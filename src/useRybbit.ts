@@ -85,6 +85,17 @@ export const useRybbit = () => {
     return window.rybbit("getUserId");
   }, []);
 
+  const setTraits = useCallback((traits: Record<string, string | number | boolean | null>) => {
+    if (typeof window === "undefined" || !window.rybbit) return;
+
+    if (typeof window.rybbit.setTraits !== "function") {
+      console.warn("window.rybbit.setTraits is not available");
+      return;
+    }
+
+    window.rybbit.setTraits(traits);
+  }, []);
+
   return {
     rybbit,
     trackEvent,
@@ -92,5 +103,6 @@ export const useRybbit = () => {
     identify,
     clearUserId,
     getUserId,
+    setTraits,
   };
 };

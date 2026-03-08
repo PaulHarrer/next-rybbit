@@ -46,6 +46,7 @@ declare global {
       (...args: any[]): void;
       q?: any[];
       event?: (eventName: string, props?: any) => void;
+      setTraits?: (traits: Record<string, string | number | boolean | null>) => void;
     };
   }
 }
