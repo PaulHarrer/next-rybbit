@@ -1,6 +1,6 @@
 {
   "name": "next-rybbit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Simple integration for Rybbit Analytics in Next.js applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,10 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "prepublishOnly": "npm run build",
     "test": "jest",
-    "dev": "npx tsc --watch"
+    "dev": "tsc --watch"
   },
   "keywords": [
     "rybbit",
