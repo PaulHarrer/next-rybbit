@@ -65,15 +65,6 @@ export default function App({ Component, pageProps }: AppProps) {
 |----------------------|------|----------|---------|-------------|
 | `siteId`             | `string` | ✅ | - | Your Rybbit site ID |
 | `analyticsHost`      | `string` | ❌ | `https://app.rybbit.io/api` | Custom analytics host URL                                                                                                                                                                                                                                 |
-| `autoTrackPageviews` | `string` | ❌ | `true` | Set to `"false"` to disable automatic tracking of the initial pageview when the script loads. You will need to manually call `window.rybbit.pageview()` to track pageviews. |
-| `trackSpa`           | `string` | ❌ | `true` | 	Set to `"false"` to disable automatic pageview tracking for single page applications (React, Vue, etc). You will need to manually call `window.rybbit.pageview()` or `window.rybbit.track()` for all but the initial pageview. |
-| `trackQuery`         | `string` | ❌ | `true` | Set to `"false"` to disable tracking of URL query strings. This enhances privacy by preventing potentially sensitive information in query parameters from being stored in your analytics data. |
-| `trackOutbound`      | `string` | ❌ | `true` | Set to `"false"` to disable automatic tracking of outbound link clicks. |
-| `webVitals`          | `string` | ❌ | `false` | Set to `"true"` to enable Web Vitals performance metrics collection (LCP, CLS, INP, FCP, TTFB). Web Vitals are disabled by default to reduce script size and network requests. |
-| `skipPatterns`       | `string[]` | ❌ | `[]` | A JSON string array of URL path patterns to ignore. Pageviews matching these patterns won’t be tracked. Supports two types of wildcards: `*` (matches within a segment) and `**` (matches across segments). |
-| `maskPatterns`       | `string[]` | ❌ | `[]` | A JSON string array of URL path patterns to mask for privacy. Pageviews matching these patterns will be tracked, but the actual URL path will be replaced with the pattern itself in analytics data. Supports the same wildcards as `data-skip-patterns`. |
-| `debounce`           | `string` | ❌ | `500` | The delay (in milliseconds) before tracking a pageview after URL changes via the History API (`pushState`, `replaceState`). Set to `0` to disable debouncing. |
-| `apiKey`             | `string` | ❌ | - | API key for tracking from localhost during development. Bypasses origin validation. |
 | `children`           | `React.ReactNode` | ✅ | - | Your app content |
 
 ### Custom Analytics Host
